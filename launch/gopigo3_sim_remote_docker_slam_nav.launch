@@ -1,0 +1,34 @@
+<launch>
+  <!-- Arguments -->
+  <arg name="ros_master_uri" default="$(env ROS_MASTER_URI)"/>
+  <arg name="remote_user" default="$(env USER)"/>
+  <arg name="remote_machine" default="localhost"/>
+  <arg name="docker_image" default="ros-noetic-nav:gopigo3"/>
+  <arg name="docker_ros_package" default="gopigo3_navigation"/>
+  <arg name="docker_roslaunch_file" default="gopigo3_slam_navigation.launch"/>
+
+  <arg name="sim_scene" default="gopigo3_turtlebot3_house"/>
+  <arg name="sim_gui" default="true"/>
+  <arg name="open_rviz" default="true"/>
+
+  <!-- Remote Docker Launcher -->
+  <include file="$(find remote_docker_launcher_ros1)/launch/remote_docker_launcher.launch">
+    <arg name="ros_master_uri" value="$(arg ros_master_uri)" />
+    <arg name="remote_user" value="$(arg remote_user)" />
+    <arg name="remote_machine" value="$(arg remote_machine)" />
+    <arg name="docker_image" value="$(arg docker_image)" />
+    <arg name="docker_ros_package" value="$(arg docker_ros_package)" />
+    <arg name="docker_roslaunch_file" value="$(arg docker_roslaunch_file)" />
+  </include>
+
+  <!-- Gazebo -->
+  <include file="$(find gopigo3_gazebo)/launch/$(arg sim_scene).launch">
+    <arg name="gui" value="$(arg sim_gui)" />
+  </include>
+
+  <!-- rviz -->
+  <group if="$(arg open_rviz)"> 
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find gopigo3_navigation)/rviz/gopigo3_navigation.rviz" required="false" />
+    <!-- (required = "true") if rviz dies, entire roslaunch will be killed -->
+  </group>
+</launch>
