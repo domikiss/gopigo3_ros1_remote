@@ -27,13 +27,13 @@ This launch file starts a Gazebo simulation and RViz locally, while the SLAM and
 - `open_rviz`: Whether to start RViz (default: true)
 - `remote_user`: User of the remote machine
 - `remote_machine`: IP address (or hostname) of the remote machine containing the Docker image
-- `ros_master_uri`: ROS master URI in the form of `http://[ROS_MASTER_IP]:11311` (default: the current value of the ROS_MASTER_URI environment varable)
+- `ros_master_uri`: ROS master URI in the form of `http://[ROS_MASTER_IP]:11311` (default: the current value of the ROS_MASTER_URI environment variable)
 - `docker_image`: Name of the Docker image on the remote machine (default: `ros-noetic-nav:gopigo3`)
 - `docker_ros_package`: ROS1 package name inside the container (default: `gopigo3_navigation`)
 - `docker_roslaunch_file`: Launch file name in the ROS1 package (default: `gopigo3_slam_navigation.launch`)
 - `docker_roslaunch_args`: Launch arguments for the launch file (optional)
 
-Usage:
+Usage (example):
 ```
 $ roslaunch gopigo3_ros1_remote gopigo3_sim_remote_docker_slam_nav.launch \
   remote_user:=[USER] remote_machine:=[IP.OF.REMOTE.MACHINE]
