@@ -1,0 +1,28 @@
+<launch>
+  <!-- Arguments -->
+
+  <arg name="sim_scene" default="gopigo3_turtlebot3_house"/>
+  <arg name="sim_gui" default="true"/>
+  <arg name="open_rviz" default="true"/>
+  <arg name="joy_teleop" default="false"/>
+  
+  <!-- Gazebo -->
+  <include file="$(find gopigo3_gazebo)/launch/$(arg sim_scene).launch">
+    <arg name="gui" value="$(arg sim_gui)" />
+  </include>
+
+  <!-- Navigation -->
+  <include file="$(find gopigo3_navigation)/launch/gopigo3_slam_navigation.launch" />
+
+  <!-- rviz -->
+  <group if="$(arg open_rviz)"> 
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find gopigo3_navigation)/rviz/gopigo3_navigation_hidecostmap.rviz" required="false" />
+    <!-- (required = "true") if rviz dies, entire roslaunch will be killed -->
+  </group>
+
+  <!-- Joystick teleop -->
+  <group if="$(arg joy_teleop)"> 
+    <include file="$(find gopigo3_ros1_remote)/launch/joy_teleop.launch" />
+  </group>
+  
+</launch>

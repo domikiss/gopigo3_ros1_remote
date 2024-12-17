@@ -1,0 +1,35 @@
+<launch>
+  <!-- Arguments -->
+
+  <arg name="ros_master_uri" default="$(env ROS_MASTER_URI)"/>
+  <arg name="robot_user" default="pi"/>
+  <arg name="robot_machine" default="gopigo3.local"/>
+  <arg name="robot_ros_package" default="gopigo3_bringup"/>
+  <arg name="robot_roslaunch_file" default="gopigo3_bmeaut_kit.launch"/>
+  <arg name="open_rviz" default="true"/>
+  <arg name="joy_teleop" default="false"/>
+  
+  <!-- Real GoPiGo3 bringup -->
+  <include file="$(find remote_launcher_ros1)/launch/remote_launcher.launch">
+    <arg name="ros_master_uri" value="$(arg ros_master_uri)" />
+    <arg name="remote_user" value="$(arg robot_user)" />
+    <arg name="remote_machine" value="$(arg robot_machine)" />
+    <arg name="ros_package" value="$(arg robot_ros_package)" />
+    <arg name="roslaunch_file" value="$(arg robot_roslaunch_file)" />
+  </include>
+
+  <!-- Navigation -->
+  <include file="$(find gopigo3_navigation)/launch/gopigo3_slam_navigation.launch" />
+
+  <!-- rviz -->
+  <group if="$(arg open_rviz)"> 
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find gopigo3_navigation)/rviz/gopigo3_navigation_hidecostmap.rviz" required="false" />
+    <!-- (required = "true") if rviz dies, entire roslaunch will be killed -->
+  </group>
+
+  <!-- Joystick teleop -->
+  <group if="$(arg joy_teleop)"> 
+    <include file="$(find gopigo3_ros1_remote)/launch/joy_teleop.launch" />
+  </group>
+  
+</launch>

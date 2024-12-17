@@ -1,16 +1,25 @@
 <launch>
   <!-- Arguments -->
   <arg name="ros_master_uri" default="$(env ROS_MASTER_URI)"/>
-  <arg name="remote_user" default="$(env USER)"/>
-  <arg name="remote_machine" default="localhost"/>
+  
+  <!-- <arg name="remote_user" default="$(env USER)"/> -->
+  <!-- <arg name="remote_machine" default="localhost"/> -->
+  <arg name="remote_user" default="bme5guser2"/>
+  <arg name="remote_machine" default="10.9.0.1"/>
   <arg name="docker_image" default="ros-noetic-nav:gopigo3"/>
   <arg name="docker_ros_package" default="gopigo3_navigation"/>
   <arg name="docker_roslaunch_file" default="gopigo3_slam_navigation.launch"/>
 
-  <arg name="sim_scene" default="gopigo3_turtlebot3_house"/>
-  <arg name="sim_gui" default="true"/>
+  <!-- <arg name="robot_user" default="$(env USER)"/> -->
+  <!-- <arg name="robot_machine" default="localhost"/> -->
+  <arg name="robot_user" default="pi"/>
+  <arg name="robot_machine" default="10.9.0.31"/>
+  <arg name="robot_ros_package" default="gopigo3_bringup"/>
+  <arg name="robot_roslaunch_file" default="gopigo3_bmeaut_kit.launch"/>
+
   <arg name="open_rviz" default="true"/>
   <arg name="joy_teleop" default="false"/>
+
 
   <!-- Remote Docker Launcher -->
   <include file="$(find remote_launcher_ros1)/launch/remote_docker_launcher.launch">
@@ -22,9 +31,13 @@
     <arg name="docker_roslaunch_file" value="$(arg docker_roslaunch_file)" />
   </include>
 
-  <!-- Gazebo -->
-  <include file="$(find gopigo3_gazebo)/launch/$(arg sim_scene).launch">
-    <arg name="gui" value="$(arg sim_gui)" />
+  <!-- Real GoPiGo3 bringup -->
+  <include file="$(find remote_launcher_ros1)/launch/remote_launcher.launch">
+    <arg name="ros_master_uri" value="$(arg ros_master_uri)" />
+    <arg name="remote_user" value="$(arg robot_user)" />
+    <arg name="remote_machine" value="$(arg robot_machine)" />
+    <arg name="ros_package" value="$(arg robot_ros_package)" />
+    <arg name="roslaunch_file" value="$(arg robot_roslaunch_file)" />
   </include>
 
   <!-- rviz -->
@@ -37,5 +50,5 @@
   <group if="$(arg joy_teleop)"> 
     <include file="$(find gopigo3_ros1_remote)/launch/joy_teleop.launch" />
   </group>
-
+  
 </launch>
